@@ -1,8 +1,8 @@
 {
   "name": "fee-project",
   "version": "1.0.0",
-  "description": "",
-  "main": "db.js",
+  "description": "TechFest registration portal",
+  "main": "server.js",
   "engines": {
     "node": "20.x"
   },
@@ -15,7 +15,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1"
   }
