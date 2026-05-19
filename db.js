@@ -2,7 +2,7 @@
 //  TechFest 2026 — API Database Layer
 // ═══════════════════════════════════════════════════════
 
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'https://techfest-feeproject.onrender.com/api';
 
 /** Add a registration */
 async function dbAddRegistration(data) {
