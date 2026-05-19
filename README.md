@@ -1,6 +1,6 @@
-# TechFest 2027 Registration Portal
+# TechFest 2026 Registration Portal
 
-A modern, secure, and interactive registration portal for TechFest 2027. Built with a sleek glassmorphic UI and an Express.js backend for secure OTP-based authentication and SQLite registration management.
+A modern, secure, and interactive registration portal for TechFest 2026. Built with a sleek glassmorphic UI and an Express.js backend for secure OTP-based authentication and registration management.
 
 ## Features
 
@@ -14,7 +14,7 @@ A modern, secure, and interactive registration portal for TechFest 2027. Built w
 
 - **Frontend:** HTML5, Vanilla CSS3, Vanilla JavaScript (ES6+), FontAwesome
 - **Backend:** Node.js, Express.js, CORS
-- **Database:** SQLite3
+- **Database:** JSON file storage for demo deployment
 
 ## Installation and Setup
 

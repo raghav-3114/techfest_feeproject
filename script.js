@@ -100,7 +100,7 @@
 })();
 
 // ─── COUNTDOWN TIMER ────────────────────────────────────
-const eventDate = new Date('March 26, 2027 15:00:00').getTime();
+const eventDate = new Date('June 30, 2026 15:00:00').getTime();
 let prevTimes   = { days: -1, hours: -1, minutes: -1, seconds: -1 };
 
 setInterval(() => {

@@ -34,7 +34,7 @@ function writeStore(store) {
 
 function genRegId() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let id = 'TF27-';
+  let id = 'TF26-';
   for (let i = 0; i < 6; i++) {
     id += chars[Math.floor(Math.random() * chars.length)];
   }
