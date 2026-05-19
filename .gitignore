@@ -1,3 +1,4 @@
 node_modules/
 techfest.db
+techfest-data.json
 .env
