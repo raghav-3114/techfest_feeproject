@@ -108,7 +108,7 @@ app.post('/api/auth/send-otp', (req, res) => {
 
   // Generate 6 digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes validity
+  const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes validity
 
   // In a real app, integrate Twilio here
   console.log(`\n===========================================`);

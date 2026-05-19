@@ -4,15 +4,18 @@
 
 // ─── AUTHENTICATION CHECK ───────────────────────────────
 (function checkAuth() {
-  const isLoginPage = window.location.pathname.endsWith('login.html');
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+  const isLoginPage = page === 'login.html';
   const token = localStorage.getItem('auth_token');
+  const pendingOtp = sessionStorage.getItem('pending_otp_challenge');
   
   if (!token && !isLoginPage) {
-    // Force user to login before seeing anything else
+    sessionStorage.setItem('post_login_redirect', page);
     window.location.href = 'login.html';
-  } else if (token && isLoginPage) {
-    // If they go to login page but are already logged in, send them to home
-    window.location.href = 'index.html';
+  } else if (token && isLoginPage && !pendingOtp) {
+    const redirectTo = sessionStorage.getItem('post_login_redirect') || 'index.html';
+    sessionStorage.removeItem('post_login_redirect');
+    window.location.href = redirectTo;
   }
 })();
 

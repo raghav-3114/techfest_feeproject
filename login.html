@@ -11,13 +11,65 @@
     .otp-section {
       display: none;
     }
+    .otp-section.is-visible {
+      display: block;
+    }
+    .mock-otp-display {
+      display: none;
+      margin: 0 0 18px;
+      padding: 14px;
+      background: rgba(0,243,255,0.1);
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      text-align: center;
+      color: white;
+    }
+    .mock-otp-display.is-visible {
+      display: block;
+    }
+    .mock-otp-label {
+      font-size: 0.78rem;
+      color: var(--cyan);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Fira Code', monospace;
+    }
+    .mock-otp-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    #mock-otp-code {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 4px;
+      font-family: 'Fira Code', monospace;
+      user-select: all;
+    }
+    .form .otp-fill-btn {
+      width: auto;
+      margin: 0;
+      padding: 9px 12px;
+      border: 1px solid rgba(0,243,255,0.35);
+      border-radius: 8px;
+      background: rgba(0,243,255,0.1);
+      color: var(--cyan);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      font-family: 'Fira Code', monospace;
+      box-shadow: none;
+      cursor: pointer;
+    }
     .otp-inputs {
       display: flex;
       gap: 10px;
       margin-bottom: 25px;
       justify-content: center;
     }
-    .otp-digit {
+    .form .otp-digit {
       width: 45px;
       height: 55px;
       background: rgba(0,0,0,0.4);
@@ -29,12 +81,24 @@
       text-align: center;
       transition: all 0.3s;
       font-family: 'Fira Code', monospace;
+      margin: 0;
+      padding: 0;
     }
-    .otp-digit:focus {
+    .form .otp-digit:focus {
       border-color: var(--orange);
       box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
       outline: none;
       transform: translateY(-2px);
+    }
+    @media (max-width: 520px) {
+      .otp-inputs {
+        gap: 7px;
+      }
+      .form .otp-digit {
+        width: 38px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
@@ -72,29 +136,31 @@
           <input type="tel" id="login-phone" placeholder=" " required autocomplete="tel">
           <label for="login-phone">Signal Number (Phone)</label>
         </div>
-        <button type="button" class="form-btn" id="send-otp-btn" onclick="sendOTP()">
+        <button type="button" class="form-btn" id="send-otp-btn" onclick="sendOTP(event)">
           <i class="fas fa-paper-plane"></i> &nbsp;Send OTP
         </button>
       </div>
 
       <div id="otp-section" class="otp-section">
+        <div id="mock-otp-display" class="mock-otp-display" aria-live="polite">
+          <div class="mock-otp-label">Mock SMS Received</div>
+          <div class="mock-otp-row">
+            <div id="mock-otp-code"></div>
+            <button type="button" class="otp-fill-btn" id="fill-otp-btn">Use Code</button>
+          </div>
+        </div>
         <label style="color:var(--muted);font-size:0.85rem;margin-bottom:12px;display:block;text-align:center;">Enter 6-Digit Transmission Code</label>
         <div class="otp-inputs">
-          <input type="text" class="otp-digit" maxlength="1" autocomplete="off" autofocus>
-          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
-          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
-          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
-          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
-          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="OTP digit 1">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 2">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 3">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 4">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 5">
+          <input type="text" class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 6">
         </div>
         <button type="submit" class="form-btn" id="verify-otp-btn">
           <i class="fas fa-shield-alt"></i> &nbsp;Verify & Access
         </button>
-      </div>
-      
-      <div id="mock-otp-display" style="display:none;margin-top:20px;padding:15px;background:rgba(0,243,255,0.1);border:1px solid var(--cyan);border-radius:8px;text-align:center;color:white;">
-        <div style="font-size:0.85rem;color:var(--cyan);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Mock SMS Received</div>
-        <div style="font-size:1.8rem;font-weight:800;letter-spacing:4px;" id="mock-otp-code"></div>
       </div>
       
       <p style="margin-top:20px;font-size:0.8rem;color:var(--muted);text-align:center;line-height:1.5;">
@@ -115,7 +181,38 @@
 
   <script src="script.js"></script>
   <script>
-    async function sendOTP() {
+    const OTP_CHALLENGE_KEY = 'pending_otp_challenge';
+    const OTP_MAX_AGE_MS = 10 * 60 * 1000;
+
+    function getOtpChallenge() {
+      try {
+        const challenge = JSON.parse(sessionStorage.getItem(OTP_CHALLENGE_KEY));
+        if (!challenge || !challenge.phone || !challenge.otp || Date.now() - challenge.createdAt > OTP_MAX_AGE_MS) {
+          sessionStorage.removeItem(OTP_CHALLENGE_KEY);
+          return null;
+        }
+        return challenge;
+      } catch (_) {
+        sessionStorage.removeItem(OTP_CHALLENGE_KEY);
+        return null;
+      }
+    }
+
+    function showOtpStep(phone, otp) {
+      document.getElementById('login-phone').value = phone;
+      document.getElementById('mock-otp-code').innerText = otp;
+      document.getElementById('mock-otp-display').classList.add('is-visible');
+      document.getElementById('phone-section').style.display = 'none';
+      document.getElementById('otp-section').classList.add('is-visible');
+      setTimeout(() => document.querySelector('.otp-digit').focus(), 100);
+    }
+
+    async function sendOTP(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
       const phone = document.getElementById('login-phone').value.trim();
       if (!phone) {
         showToast('Missing Field', 'Please enter your phone number.', 'warning');
@@ -135,12 +232,13 @@
         const data = await res.json();
         
         if (res.ok) {
-          document.getElementById('mock-otp-code').innerText = data.otp;
-          document.getElementById('mock-otp-display').style.display = 'block';
-          showToast('OTP Sent', 'Check the mock SMS below to copy your OTP.', 'success');
-          document.getElementById('phone-section').style.display = 'none';
-          document.getElementById('otp-section').style.display = 'block';
-          setTimeout(() => document.querySelector('.otp-digit').focus(), 100);
+          sessionStorage.setItem(OTP_CHALLENGE_KEY, JSON.stringify({
+            phone,
+            otp: data.otp,
+            createdAt: Date.now()
+          }));
+          showOtpStep(phone, data.otp);
+          showToast('OTP Sent', 'Use the mock SMS code shown in the form.', 'success');
         } else {
           showToast('Error', data.error || 'Failed to send OTP.', 'error');
         }
@@ -177,9 +275,12 @@
         
         if (res.ok) {
           showToast('Success', 'Authentication verified.', 'success');
+          sessionStorage.removeItem(OTP_CHALLENGE_KEY);
           localStorage.setItem('auth_token', data.token);
           setTimeout(() => {
-            window.location.href = 'index.html'; // Redirect to home page upon successful login
+            const redirectTo = sessionStorage.getItem('post_login_redirect') || 'index.html';
+            sessionStorage.removeItem('post_login_redirect');
+            window.location.href = redirectTo;
           }, 1000);
         } else {
           showToast('Error', data.error || 'Invalid OTP.', 'error');
@@ -194,17 +295,59 @@
 
     // OTP Input Interactions
     const otpInputs = document.querySelectorAll('.otp-digit');
+    const fillOtpBtn = document.getElementById('fill-otp-btn');
+    const restoredChallenge = getOtpChallenge();
+    if (restoredChallenge) {
+      showOtpStep(restoredChallenge.phone, restoredChallenge.otp);
+    }
+
+    function setOTPValue(value, startIndex = 0) {
+      const digits = String(value).replace(/\D/g, '').slice(0, otpInputs.length - startIndex);
+      if (startIndex === 0) {
+        otpInputs.forEach(input => { input.value = ''; });
+      }
+
+      digits.split('').forEach((digit, offset) => {
+        otpInputs[startIndex + offset].value = digit;
+      });
+
+      const nextInput = Array.from(otpInputs).find(input => !input.value);
+      if (!nextInput) {
+        document.getElementById('verify-otp-btn').focus();
+      } else {
+        nextInput.focus();
+      }
+    }
+
+    fillOtpBtn.addEventListener('click', () => {
+      setOTPValue(document.getElementById('mock-otp-code').innerText);
+    });
+
     otpInputs.forEach((input, index) => {
       input.addEventListener('input', (e) => {
-        // Allow numeric only
-        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        const digits = e.target.value.replace(/\D/g, '');
+        if (digits.length > 1) {
+          e.target.value = '';
+          setOTPValue(digits, index);
+          return;
+        }
+
+        e.target.value = digits;
         if (e.target.value && index < otpInputs.length - 1) {
           otpInputs[index + 1].focus();
         }
       });
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        setOTPValue(e.clipboardData.getData('text'), index);
+      });
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && !e.target.value && index > 0) {
           otpInputs[index - 1].focus();
+        } else if (e.key === 'ArrowLeft' && index > 0) {
+          otpInputs[index - 1].focus();
+        } else if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
         }
       });
     });
