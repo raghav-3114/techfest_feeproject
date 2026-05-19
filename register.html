@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | TechFest 2027</title>
+  <meta name="description"
+    content="Register for TechFest 2027. Choose your event — Hackathon, Robo-Wars, or Immersive VR.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="ambient-glow"></div>
+  <div class="noise-overlay"></div>
+
+  <nav>
+    <h2><i class="fas fa-microchip" style="color:var(--orange)"></i> TechFest</h2>
+    <button id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </nav>
+
+  <section
+    style="padding-top:100px;min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <p class="section-label">
+      <i class="fas fa-satellite-dish"></i> Initialize Profile
+    </p>
+    <h1
+      style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;margin-bottom:8px;letter-spacing:-.02em;text-align:center;">
+      Join the Ranks</h1>
+    <p
+      style="color:var(--muted);font-family:'Fira Code',monospace;font-size:.85rem;margin-bottom:0;letter-spacing:.05em;text-align:center;">
+      Transmit your credentials to gain entry.</p>
+
+    <form class="form" id="reg-form" onsubmit="submitForm(event)" novalidate>
+      <h3><i class="fas fa-id-badge" style="color:var(--orange);margin-right:8px;"></i> Candidate Profile</h3>
+
+      <div class="input-group">
+        <input type="text" id="name" placeholder=" " required autocomplete="name">
+        <label for="name">Pilot Name (Full Name)</label>
+      </div>
+
+      <div class="input-group">
+        <input type="email" id="email" placeholder=" " required autocomplete="email">
+        <label for="email">Comms Channel (Email)</label>
+      </div>
+
+      <div class="input-group">
+        <input type="tel" id="phone" placeholder=" " autocomplete="tel">
+        <label for="phone">Signal Number (Phone — optional)</label>
+      </div>
+
+      <div class="input-group">
+        <select id="event" required>
+          <option value="" disabled selected></option>
+          <option value="Hackathon">⚡ Hackathon — ₹50,000 Prize</option>
+          <option value="Robo-Wars">🤖 Robo-Wars — ₹30,000 Prize</option>
+          <option value="Immersive VR">🥽 Immersive VR — ₹20,000 Prize</option>
+        </select>
+        <label for="event">Select Primary Directive</label>
+      </div>
+
+      <button type="submit" class="form-btn" id="submit-btn">
+        <i class="fas fa-satellite-dish"></i> &nbsp;Transmit Data
+      </button>
+      <p class="form-note"><i class="fas fa-lock" style="margin-right:5px;opacity:.5;"></i>Each email can register once
+        per event</p>
+    </form>
+  </section>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-backdrop" id="confirm-modal">
+    <div class="modal-box">
+      <div class="modal-icon"><i class="fas fa-circle-check"></i></div>
+      <h2>Registration Secured!</h2>
+      <p>Welcome aboard, <strong id="conf-name" style="color:var(--white);">—</strong></p>
+      <p>You're registered for <strong id="conf-event" style="color:var(--cyan);">—</strong></p>
+      <div class="modal-reg-id" id="conf-id">TF27-XXXXXX</div>
+      <p style="font-size:.75rem;margin-bottom:24px;">Save your Registration ID above. See you on March 26, 2027!</p>
+      <button class="modal-close" onclick="closeModal()">
+        <i class="fas fa-check"></i> &nbsp;Got it!
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    <p><i class="fas fa-microchip" style="color:var(--orange);"></i> &nbsp;TechFest 2027 &nbsp;·&nbsp; All systems
+      operational</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

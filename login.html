@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | TechFest 2027</title>
+  <meta name="description" content="Login to TechFest 2027 Admin Portal.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .otp-section {
+      display: none;
+    }
+    .otp-inputs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      justify-content: center;
+    }
+    .otp-digit {
+      width: 45px;
+      height: 55px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: var(--cyan);
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      transition: all 0.3s;
+      font-family: 'Fira Code', monospace;
+    }
+    .otp-digit:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+      outline: none;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+  <div class="noise-overlay"></div>
+
+  <nav>
+    <h2><i class="fas fa-microchip" style="color:var(--orange)"></i> TechFest</h2>
+    <button id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="login.html" class="active">Login</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </nav>
+
+  <section style="padding-top:100px;min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <p class="section-label">
+      <i class="fas fa-satellite-dish"></i> Secure Access
+    </p>
+    <h1 style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;margin-bottom:8px;letter-spacing:-.02em;text-align:center;">Admin Portal</h1>
+    <p style="color:var(--muted);font-family:'Fira Code',monospace;font-size:.85rem;margin-bottom:0;letter-spacing:.05em;text-align:center;">Verify identity via mobile protocol.</p>
+
+    <form class="form" id="login-form" onsubmit="handleLogin(event)" novalidate>
+      <h3><i class="fas fa-lock" style="color:var(--cyan);margin-right:8px;"></i> Authentication</h3>
+
+      <div id="phone-section">
+        <div class="input-group">
+          <input type="tel" id="login-phone" placeholder=" " required autocomplete="tel">
+          <label for="login-phone">Signal Number (Phone)</label>
+        </div>
+        <button type="button" class="form-btn" id="send-otp-btn" onclick="sendOTP()">
+          <i class="fas fa-paper-plane"></i> &nbsp;Send OTP
+        </button>
+      </div>
+
+      <div id="otp-section" class="otp-section">
+        <label style="color:var(--muted);font-size:0.85rem;margin-bottom:12px;display:block;text-align:center;">Enter 6-Digit Transmission Code</label>
+        <div class="otp-inputs">
+          <input type="text" class="otp-digit" maxlength="1" autocomplete="off" autofocus>
+          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
+          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
+          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
+          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
+          <input type="text" class="otp-digit" maxlength="1" autocomplete="off">
+        </div>
+        <button type="submit" class="form-btn" id="verify-otp-btn">
+          <i class="fas fa-shield-alt"></i> &nbsp;Verify & Access
+        </button>
+      </div>
+      
+      <div id="mock-otp-display" style="display:none;margin-top:20px;padding:15px;background:rgba(0,243,255,0.1);border:1px solid var(--cyan);border-radius:8px;text-align:center;color:white;">
+        <div style="font-size:0.85rem;color:var(--cyan);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Mock SMS Received</div>
+        <div style="font-size:1.8rem;font-weight:800;letter-spacing:4px;" id="mock-otp-code"></div>
+      </div>
+      
+      <p style="margin-top:20px;font-size:0.8rem;color:var(--muted);text-align:center;line-height:1.5;">
+        <i class="fas fa-info-circle"></i> <strong>Note for Teachers:</strong> The OTP system is fully functional using simulated data. In a production build, integrating real SMS requires a paid gateway provider like Twilio or AWS SNS.
+      </p>
+      
+    </form>
+  </section>
+
+  <footer>
+    <p><i class="fas fa-microchip" style="color:var(--orange);"></i> &nbsp;TechFest 2027 &nbsp;·&nbsp; All systems operational</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    async function sendOTP() {
+      const phone = document.getElementById('login-phone').value.trim();
+      if (!phone) {
+        showToast('Missing Field', 'Please enter your phone number.', 'warning');
+        return;
+      }
+      
+      const btn = document.getElementById('send-otp-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Requesting...';
+
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          document.getElementById('mock-otp-code').innerText = data.otp;
+          document.getElementById('mock-otp-display').style.display = 'block';
+          showToast('OTP Sent', 'Check the mock SMS below to copy your OTP.', 'success');
+          document.getElementById('phone-section').style.display = 'none';
+          document.getElementById('otp-section').style.display = 'block';
+          setTimeout(() => document.querySelector('.otp-digit').focus(), 100);
+        } else {
+          showToast('Error', data.error || 'Failed to send OTP.', 'error');
+        }
+      } catch (err) {
+        showToast('Error', 'Server unreachable. Is the backend running?', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> &nbsp;Send OTP';
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const phone = document.getElementById('login-phone').value.trim();
+      const otpDigits = Array.from(document.querySelectorAll('.otp-digit')).map(i => i.value);
+      const otp = otpDigits.join('');
+      
+      if (otp.length < 6) {
+        showToast('Missing Field', 'Please enter the complete 6-digit OTP.', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('verify-otp-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Verifying...';
+
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, otp })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          showToast('Success', 'Authentication verified.', 'success');
+          localStorage.setItem('auth_token', data.token);
+          setTimeout(() => {
+            window.location.href = 'index.html'; // Redirect to home page upon successful login
+          }, 1000);
+        } else {
+          showToast('Error', data.error || 'Invalid OTP.', 'error');
+        }
+      } catch (err) {
+        showToast('Error', 'Server unreachable.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i> &nbsp;Verify & Access';
+      }
+    }
+
+    // OTP Input Interactions
+    const otpInputs = document.querySelectorAll('.otp-digit');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        // Allow numeric only
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        if (e.target.value && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events | TechFest 2027</title>
+  <meta name="description" content="Explore TechFest 2027 events — Hackathon, Robo-Wars and Immersive VR. ₹1 Lakh in prizes.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+  <div class="noise-overlay"></div>
+
+  <nav>
+    <h2><i class="fas fa-microchip" style="color:var(--orange)"></i> TechFest</h2>
+    <button id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </nav>
+
+  <section style="padding-top:100px;">
+    <p class="section-label">
+      <i class="fas fa-circle" style="font-size:.5rem;"></i> 3 Events · ₹1 Lakh Pool
+    </p>
+    <h1 style="font-size:clamp(2.2rem,5vw,4rem);font-weight:800;margin-bottom:14px;letter-spacing:-.02em;">Select Your Arena</h1>
+    <p class="section-sub">Choose your discipline and prepare for battle.</p>
+
+    <div class="grid" style="max-width:1100px;margin:0 auto 60px;">
+
+      <!-- Hackathon -->
+      <div class="card" style="text-align:center;padding:44px 32px;">
+        <div class="event-card-icon orange" style="margin:0 auto 24px;">
+          <i class="fas fa-code" style="color:var(--orange);"></i>
+        </div>
+        <h3 style="font-size:1.4rem;margin-bottom:6px;">Hackathon</h3>
+        <div style="font-family:'Fira Code',monospace;font-size:.75rem;color:var(--orange);letter-spacing:.1em;margin-bottom:14px;">₹50,000 TOP PRIZE</div>
+        <p style="margin-bottom:16px;">24-hour software development sprint with 500+ developers.</p>
+        <ul style="list-style:none;margin:0 0 28px;display:flex;flex-direction:column;gap:8px;text-align:left;">
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--orange);font-size:.6rem;"></i>Teams of 2–4
+          </li>
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--orange);font-size:.6rem;"></i>In-Person &amp; Remote Hybrid
+          </li>
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--orange);font-size:.6rem;"></i>API Keys &amp; Cloud Credits Provided
+          </li>
+        </ul>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="hackathon.html" class="btn" style="padding:11px 22px;font-size:.82rem;">View Details</a>
+          <a href="register.html" class="btn" style="padding:11px 22px;font-size:.82rem;background:rgba(255,69,0,0.12);box-shadow:none;border:1px solid rgba(255,69,0,0.3);">Register</a>
+        </div>
+      </div>
+
+      <!-- Robo-Wars -->
+      <div class="card" style="text-align:center;padding:44px 32px;">
+        <div class="event-card-icon cyan" style="margin:0 auto 24px;">
+          <i class="fas fa-robot" style="color:var(--cyan);"></i>
+        </div>
+        <h3 style="font-size:1.4rem;margin-bottom:6px;">Robo-Wars</h3>
+        <div style="font-family:'Fira Code',monospace;font-size:.75rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:14px;">₹30,000 TOP PRIZE</div>
+        <p style="margin-bottom:16px;">Build, program, and destroy. The ultimate engineering arena.</p>
+        <ul style="list-style:none;margin:0 0 28px;display:flex;flex-direction:column;gap:8px;text-align:left;">
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--cyan);font-size:.6rem;"></i>Weight Classes: 1kg / 3kg
+          </li>
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--cyan);font-size:.6rem;"></i>Full-contact combat arena
+          </li>
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--cyan);font-size:.6rem;"></i>Judged on speed &amp; destruction
+          </li>
+        </ul>
+        <a href="register.html" class="btn btn-cyan" style="padding:11px 22px;font-size:.82rem;">Register Now</a>
+      </div>
+
+      <!-- Immersive VR -->
+      <div class="card" style="text-align:center;padding:44px 32px;">
+        <div class="event-card-icon violet" style="margin:0 auto 24px;">
+          <i class="fas fa-vr-cardboard" style="color:var(--magenta);"></i>
+        </div>
+        <h3 style="font-size:1.4rem;margin-bottom:6px;">Immersive VR</h3>
+        <div style="font-family:'Fira Code',monospace;font-size:.75rem;color:var(--magenta);letter-spacing:.1em;margin-bottom:14px;">₹20,000 TOP PRIZE</div>
+        <p style="margin-bottom:16px;">Design the next generation virtual reality experience.</p>
+        <ul style="list-style:none;margin:0 0 28px;display:flex;flex-direction:column;gap:8px;text-align:left;">
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--magenta);font-size:.6rem;"></i>Unity / Unreal Engine
+          </li>
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--magenta);font-size:.6rem;"></i>Headsets provided on-site
+          </li>
+          <li style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center;">
+            <i class="fas fa-chevron-right" style="color:var(--magenta);font-size:.6rem;"></i>Solo or team of 2
+          </li>
+        </ul>
+        <a href="register.html" class="btn btn-violet" style="padding:11px 22px;font-size:.82rem;">Register Now</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p><i class="fas fa-microchip" style="color:var(--orange);"></i> &nbsp;TechFest 2027 &nbsp;·&nbsp; All systems operational</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="register.html">Register</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

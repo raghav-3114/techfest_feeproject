@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechFest 2027 | Next Gen Tech Event</title>
+  <meta name="description" content="TechFest 2027 — Join 500+ developers, engineers and creators for the ultimate tech competition. Hackathon, Robo-Wars, Immersive VR.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+  <div class="noise-overlay"></div>
+
+  <nav>
+    <h2><i class="fas fa-microchip" style="color:var(--orange)"></i> TechFest</h2>
+    <button id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="admin.html">Admin</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero video-hero">
+    <video autoplay muted loop playsinline class="bg-video">
+      <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <div style="font-family:'Fira Code',monospace;font-size:.75rem;color:var(--orange);letter-spacing:.3em;text-transform:uppercase;margin-bottom:20px;">
+        <i class="fas fa-circle" style="font-size:.5rem;animation:blink 1.2s infinite;"></i> &nbsp;Live Event — March 26, 2027
+      </div>
+      <h1 class="glitch-text" data-text="TechFest 2027">TechFest 2027</h1>
+      <p>Innovate &nbsp;•&nbsp; Build &nbsp;•&nbsp; Compete</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="register.html" class="btn"><i class="fas fa-rocket"></i> Register Now</a>
+        <a href="events.html" class="btn" style="background:rgba(255,69,0,0.12);box-shadow:none;border:1px solid rgba(255,69,0,0.35);">View Events</a>
+      </div>
+    </div>
+    <div class="hero-ticker">
+      <div class="ticker-track">
+        <span><b>500+</b> Developers &nbsp;/</span>
+        <span><b>₹1 Lakh</b> Prize Pool &nbsp;/</span>
+        <span>3 Events — <b>Hackathon · Robo-Wars · Immersive VR</b> &nbsp;/</span>
+        <span>March 26, 2027 &nbsp;/</span>
+        <span><b>In-Person + Remote Hybrid</b> &nbsp;/</span>
+        <span><b>API Keys · Cloud Credits · Energy Drinks</b> Provided &nbsp;/</span>
+        <span><b>500+</b> Developers &nbsp;/</span>
+        <span><b>₹1 Lakh</b> Prize Pool &nbsp;/</span>
+        <span>3 Events — <b>Hackathon · Robo-Wars · Immersive VR</b> &nbsp;/</span>
+        <span>March 26, 2027 &nbsp;/</span>
+        <span><b>In-Person + Remote Hybrid</b> &nbsp;/</span>
+        <span><b>API Keys · Cloud Credits · Energy Drinks</b> Provided &nbsp;/</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="countdown">
+    <h2>// transmission_starts_in</h2>
+    <div class="flip-container">
+      <div class="flip-box"><span id="days">00</span><span class="label">Days</span></div>
+      <div class="flip-divider">:</div>
+      <div class="flip-box"><span id="hours">00</span><span class="label">Hours</span></div>
+      <div class="flip-divider">:</div>
+      <div class="flip-box"><span id="minutes">00</span><span class="label">Mins</span></div>
+      <div class="flip-divider">:</div>
+      <div class="flip-box"><span id="seconds">00</span><span class="label">Secs</span></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- STATS BAR -->
+  <section style="padding:60px 30px;text-align:center;">
+    <div style="display:flex;flex-wrap:wrap;gap:40px;justify-content:center;max-width:900px;margin:0 auto;">
+      <div class="reveal-el">
+        <div style="font-size:2.8rem;font-weight:800;color:var(--orange);">500+</div>
+        <div style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;">Developers</div>
+      </div>
+      <div class="reveal-el">
+        <div style="font-size:2.8rem;font-weight:800;color:var(--cyan);">₹1L</div>
+        <div style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;">Prize Pool</div>
+      </div>
+      <div class="reveal-el">
+        <div style="font-size:2.8rem;font-weight:800;color:var(--magenta);">3</div>
+        <div style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;">Events</div>
+      </div>
+      <div class="reveal-el">
+        <div style="font-size:2.8rem;font-weight:800;color:var(--white);">24h</div>
+        <div style="font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;">Non-Stop</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- NEWS -->
+  <section class="news-section">
+    <p class="news-label"><i class="fas fa-satellite-dish"></i> &nbsp;Incoming Transmission</p>
+    <h2>Latest Intel</h2>
+    <p style="color:var(--muted);font-family:'Fira Code',monospace;font-size:.85rem;margin-bottom:40px;">Real-time signal intercepts from the frontier.</p>
+    <div id="news-container" class="grid"></div>
+  </section>
+
+  <footer>
+    <p style="display:flex;align-items:center;gap:8px;">
+      <i class="fas fa-microchip" style="color:var(--orange);"></i>
+      TechFest 2027 &nbsp;·&nbsp; All systems operational
+    </p>
+    <div class="footer-links">
+      <a href="events.html">Events</a>
+      <a href="register.html">Register</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+/* ── UPGRADES.CSS — additional styles on top of style.css ── */
+
+/* ─── MOBILE NAV ─────────────────────────────────────── */
+#hamburger {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: var(--white);
+  font-size: 1.1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+#hamburger:hover { background: rgba(255,255,255,0.06); border-color: var(--orange); }
+
+nav a.active { color: var(--white); }
+nav a.active::after { width: 100%; }
+
+@media (max-width: 768px) {
+  #hamburger { display: flex; align-items: center; }
+  #nav-menu {
+    display: none; flex-direction: column; gap: 0;
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: rgba(8,8,18,0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 10px 0;
+  }
+  #nav-menu.open { display: flex; }
+  #nav-menu li { width: 100%; }
+  #nav-menu a {
+    display: block; padding: 14px 28px;
+    font-size: 0.9rem; letter-spacing: .06em;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  #nav-menu a::after { display: none; }
+  #nav-menu a:hover { background: rgba(255,69,0,0.07); color: var(--orange); }
+}
+
+/* ─── IMPROVED TOAST ─────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 30px; right: 24px;
+  background: rgba(10,10,22,0.97);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex; align-items: flex-start; gap: 14px;
+  z-index: 9999;
+  transform: translateY(120px); opacity: 0;
+  transition: all .45s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  max-width: 360px; min-width: 260px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+.toast-body { flex: 1; font-size: .88rem; }
+.toast-body strong { display: block; margin-bottom: 2px; }
+.toast-body span { color: var(--muted); font-family: 'Fira Code', monospace; font-size: .78rem; }
+.toast-close {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: .8rem; padding: 2px 4px;
+  flex-shrink: 0; transition: color .2s;
+}
+.toast-close:hover { color: var(--white); }
+
+/* ─── CONFIRMATION MODAL ─────────────────────────────── */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 4000;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal-box {
+  background: rgba(10,10,22,0.98);
+  border: 1px solid rgba(0,243,255,0.25);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 460px; width: 90%;
+  text-align: center;
+  animation: popIn .4s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: 0 0 60px rgba(0,243,255,0.15);
+  position: relative;
+}
+@keyframes popIn { from { opacity:0; transform:scale(.85); } to { opacity:1; transform:scale(1); } }
+.modal-icon { font-size: 3rem; color: var(--cyan); margin-bottom: 20px; }
+.modal-box h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 10px; }
+.modal-box p  { color: var(--muted); font-family: 'Fira Code', monospace; font-size: .85rem; margin-bottom: 8px; }
+.modal-reg-id {
+  display: inline-block; margin: 16px 0 28px;
+  background: rgba(0,243,255,0.1);
+  border: 1px solid rgba(0,243,255,0.3);
+  border-radius: 10px; padding: 12px 28px;
+  font-family: 'Fira Code', monospace;
+  font-size: 1.3rem; color: var(--cyan); letter-spacing: .15em;
+}
+.modal-close {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 10px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-2));
+  color: #fff; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: .9rem;
+  letter-spacing: .06em; cursor: pointer;
+  box-shadow: 0 0 20px var(--glow-orange);
+  transition: box-shadow .3s, transform .2s;
+}
+.modal-close:hover { box-shadow: 0 0 40px var(--glow-orange); transform: translateY(-1px); }
+
+/* ─── ADMIN IMPROVEMENTS ─────────────────────────────── */
+.admin-toolbar {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  align-items: center; margin-bottom: 20px;
+}
+.admin-search {
+  flex: 1; min-width: 180px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 11px 18px;
+  color: var(--white); font-family: 'Fira Code', monospace;
+  font-size: .85rem; outline: none;
+  transition: border-color .3s, box-shadow .3s;
+}
+.admin-search::placeholder { color: var(--muted); }
+.admin-search:focus {
+  border-color: rgba(255,69,0,0.4);
+  box-shadow: 0 0 0 3px rgba(255,69,0,0.08);
+}
+.admin-filter {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 11px 16px;
+  color: var(--white); font-family: 'Fira Code', monospace;
+  font-size: .82rem; outline: none; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+}
+.admin-filter option { background: #0a0a16; }
+.btn-export {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px;
+  border: 1px solid rgba(0,243,255,0.3);
+  background: rgba(0,243,255,0.08);
+  color: var(--cyan); font-family: 'Fira Code', monospace;
+  font-size: .8rem; cursor: pointer;
+  transition: background .2s, box-shadow .2s;
+}
+.btn-export:hover { background: rgba(0,243,255,0.15); box-shadow: 0 0 16px var(--glow-cyan); }
+.btn-purge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px;
+  border: 1px solid rgba(255,0,0,0.2);
+  background: rgba(255,0,0,0.07);
+  color: rgba(255,100,100,0.85); font-family: 'Fira Code', monospace;
+  font-size: .8rem; cursor: pointer;
+  transition: background .2s;
+}
+.btn-purge:hover { background: rgba(255,0,0,0.14); }
+
+/* table extras */
+.user-cell { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,69,0,0.15);
+  border: 1px solid rgba(255,69,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .82rem; font-weight: 800; color: var(--orange);
+  flex-shrink: 0;
+}
+.user-name { font-size: .9rem; font-weight: 600; }
+.reg-id { font-family: 'Fira Code', monospace; font-size: .7rem; color: var(--muted); margin-top: 2px; }
+.mono { font-family: 'Fira Code', monospace; }
+.muted { color: var(--muted); }
+.small { font-size: .78rem; }
+
+.del-btn {
+  background: rgba(255,0,0,0.06); border: 1px solid rgba(255,0,0,0.15);
+  color: rgba(255,100,100,0.7); border-radius: 8px;
+  padding: 7px 11px; cursor: pointer; font-size: .82rem;
+  transition: background .2s, color .2s;
+}
+.del-btn:hover { background: rgba(255,0,0,0.18); color: #ff6464; }
+
+/* table header with 6 cols */
+th:nth-child(6), td:nth-child(6) { text-align: center; width: 60px; }
+
+/* ─── SKELETON LOADING ───────────────────────────────── */
+.skeleton { pointer-events: none; }
+.skel-img {
+  width: 100%; height: 160px;
+  border-radius: 10px; margin-bottom: 16px;
+  background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.04) 75%);
+  background-size: 200% 100%;
+  animation: skelShimmer 1.4s infinite;
+}
+.skel-line {
+  height: 12px; border-radius: 4px; margin-bottom: 8px;
+  background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.04) 75%);
+  background-size: 200% 100%;
+  animation: skelShimmer 1.4s infinite;
+}
+.skel-line.w80 { width: 80%; }
+.skel-line.w50 { width: 50%; }
+@keyframes skelShimmer { to { background-position: -200% 0; } }
+
+/* ─── NEWS READ-MORE ─────────────────────────────────── */
+.news-tag {
+  font-family: 'Fira Code', monospace; font-size: .68rem;
+  color: var(--orange); text-transform: uppercase;
+  letter-spacing: .1em; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.news-tag i { font-size: .4rem; }
+.card h3 { font-size: 1rem; line-height: 1.55; margin-bottom: 14px; }
+.read-more {
+  font-family: 'Fira Code', monospace; font-size: .78rem;
+  color: var(--orange); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: gap .2s;
+}
+.read-more:hover { gap: 10px; }
+
+/* ─── REGISTER PHONE FIELD ───────────────────────────── */
+.form-note {
+  font-family: 'Fira Code', monospace; font-size: .72rem;
+  color: var(--muted); text-align: center;
+  margin-top: 14px; letter-spacing: .04em;
+}
+
+/* ─── STAT CARD TREND ────────────────────────────────── */
+.stat-trend {
+  font-family: 'Fira Code', monospace;
+  font-size: .7rem; color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ─── SECTION HEADINGS ───────────────────────────────── */
+.section-label {
+  font-family: 'Fira Code', monospace;
+  font-size: .78rem; color: var(--orange);
+  letter-spacing: .2em; text-transform: uppercase;
+  margin-bottom: 14px; display: flex;
+  align-items: center; gap: 8px; justify-content: center;
+}
+
+/* ─── FADEUP KEYFRAME (admin rows) ──────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.2;} }
+
+/* ─── FLOATING HELP WIDGET ─────────────────────────────── */
+.help-widget { position: fixed; bottom: 24px; left: 24px; z-index: 9998; }
+.help-btn { 
+  width: 56px; height: 56px; border-radius: 50%; 
+  background: linear-gradient(135deg, var(--orange), var(--magenta)); 
+  color: white; border: none; font-size: 1.5rem; cursor: pointer; 
+  box-shadow: 0 4px 20px rgba(255, 69, 0, 0.4); 
+  transition: transform 0.3s, box-shadow 0.3s; 
+  display: flex; align-items: center; justify-content: center; 
+}
+.help-btn:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(255, 69, 0, 0.6); }
+.help-window { 
+  position: absolute; bottom: 70px; left: 0; width: 320px; 
+  background: rgba(10, 10, 22, 0.95); backdrop-filter: blur(10px); 
+  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; 
+  padding: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); 
+  opacity: 0; transform: translateY(20px); pointer-events: none; 
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+}
+.help-window.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.help-window h4 { color: var(--cyan); margin-bottom: 12px; font-size: 1.1rem; }
+.help-window p { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; line-height: 1.4; }
+.help-window .chat-input { 
+  width: 100%; background: rgba(0,0,0,0.4); 
+  border: 1px solid rgba(255,255,255,0.1); padding: 10px; 
+  border-radius: 8px; color: white; margin-bottom: 10px; 
+  font-family: inherit; 
+}
+.help-window .send-btn { 
+  width: 100%; padding: 10px; border-radius: 8px; 
+  background: rgba(0, 243, 255, 0.1); border: 1px solid rgba(0, 243, 255, 0.3); 
+  color: var(--cyan); cursor: pointer; transition: background 0.2s; 
+}
+.help-window .send-btn:hover { background: rgba(0, 243, 255, 0.2); }
