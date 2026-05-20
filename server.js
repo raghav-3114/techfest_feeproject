@@ -5,31 +5,70 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'techfest-data.json');
+const DATA_DIR = process.env.DATA_DIR || process.env.RENDER_DISK_PATH || __dirname;
+const DATA_FILE = process.env.DATA_FILE || path.join(DATA_DIR, 'techfest-data.json');
+const VALID_EVENTS = new Set(['Hackathon', 'Robo-Wars', 'Immersive VR']);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
+function emptyStore() {
+  return { registrations: [], otps: {} };
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function normalizePhone(phone) {
+  return String(phone || '').trim();
+}
+
+function normalizeText(value) {
+  return String(value || '').trim();
+}
+
+function normalizeRegistration(row, index = 0) {
+  return {
+    id: Number(row.id) || index + 1,
+    regId: row.regId || genRegId(),
+    name: normalizeText(row.name),
+    email: normalizeEmail(row.email),
+    phone: normalizePhone(row.phone),
+    event: normalizeText(row.event),
+    timestamp: row.timestamp || new Date().toISOString()
+  };
+}
+
 function readStore() {
   try {
     if (!fs.existsSync(DATA_FILE)) {
-      return { registrations: [], otps: {} };
+      return emptyStore();
     }
 
     const store = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     return {
-      registrations: Array.isArray(store.registrations) ? store.registrations : [],
+      registrations: Array.isArray(store.registrations)
+        ? store.registrations.map(normalizeRegistration)
+        : [],
       otps: store.otps && typeof store.otps === 'object' ? store.otps : {}
     };
   } catch (err) {
     console.error('Error reading data store:', err.message);
-    return { registrations: [], otps: {} };
+    return emptyStore();
   }
 }
 
 function writeStore(store) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2));
+  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+  const payload = JSON.stringify({
+    registrations: store.registrations.map(normalizeRegistration),
+    otps: store.otps || {}
+  }, null, 2);
+  const tempFile = `${DATA_FILE}.tmp`;
+  fs.writeFileSync(tempFile, payload);
+  fs.renameSync(tempFile, DATA_FILE);
 }
 
 function genRegId() {
@@ -42,13 +81,23 @@ function genRegId() {
 }
 
 app.post('/api/register', (req, res) => {
-  const { name, email, phone, event } = req.body;
+  const name = normalizeText(req.body.name);
+  const email = normalizeEmail(req.body.email);
+  const phone = normalizePhone(req.body.phone);
+  const event = normalizeText(req.body.event);
+
   if (!name || !email || !event) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
+  if (!VALID_EVENTS.has(event)) {
+    return res.status(400).json({ error: 'Invalid event selected' });
+  }
+
   const store = readStore();
-  const duplicate = store.registrations.some(row => row.email === email && row.event === event);
+  const duplicate = store.registrations.find(row =>
+    normalizeEmail(row.email) === email && normalizeText(row.event) === event
+  );
   if (duplicate) {
     return res.status(409).json({ duplicate: true, message: `${email} is already registered for ${event}.` });
   }

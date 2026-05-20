@@ -27,12 +27,18 @@ A modern, secure, and interactive registration portal for TechFest 2026. Built w
 2. **Start the Backend Server:**
    This project relies on the Node.js backend to serve API requests.
    ```bash
-   node server.js
+   npm start
    ```
    The backend will run on `http://localhost:3000`.
 
 3. **Open the Application:**
-   Once the backend is running, open `index.html` in your web browser. A local development server like VS Code Live Server is recommended for the best experience.
+   Once the backend is running, open `http://localhost:3000` in your web browser. Opening the HTML files directly or through a separate Live Server can point the frontend at the wrong API, which prevents registrations from appearing in the local admin dashboard.
+
+## Registration Storage
+
+- Registration data is saved by the backend in `techfest-data.json`, not in browser session storage or local storage.
+- Duplicate registrations are blocked server-side for the same email and event.
+- For hosted deployments, set `DATA_DIR` or `DATA_FILE` to a persistent disk/location. Without persistent server storage, platforms with ephemeral filesystems can lose JSON data after restarts or redeploys.
 
 ## Usage Notes
 

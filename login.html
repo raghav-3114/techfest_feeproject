@@ -179,6 +179,7 @@
     </div>
   </footer>
 
+  <script src="db.js"></script>
   <script src="script.js"></script>
   <script>
     const OTP_CHALLENGE_KEY = 'pending_otp_challenge';
@@ -224,7 +225,7 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Requesting...';
 
       try {
-        const res = await fetch('https://techfest-feeproject.onrender.com/api/auth/send-otp', {
+        const res = await fetch(window.TechFestAPI.url('/auth/send-otp'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone })
@@ -266,7 +267,7 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Verifying...';
 
       try {
-        const res = await fetch('https://techfest-feeproject.onrender.com/api/auth/verify-otp', {
+        const res = await fetch(window.TechFestAPI.url('/auth/verify-otp'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone, otp })

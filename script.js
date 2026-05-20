@@ -221,6 +221,9 @@ async function initAdmin() {
       }
       localStorage.removeItem('users');
       _allUsers = await dbGetAll();
+    } else {
+      console.error(e);
+      showToast('Backend Unreachable', 'Start the backend server, then refresh this admin page.', 'error');
     }
   }
 
