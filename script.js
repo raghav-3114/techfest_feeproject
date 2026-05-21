@@ -2,23 +2,6 @@
 //  TechFest 2026 — Main Script
 // ═══════════════════════════════════════════════════════
 
-// ─── AUTHENTICATION CHECK ───────────────────────────────
-(function checkAuth() {
-  const page = window.location.pathname.split('/').pop() || 'index.html';
-  const isLoginPage = page === 'login.html';
-  const token = localStorage.getItem('auth_token');
-  const pendingOtp = sessionStorage.getItem('pending_otp_challenge');
-  
-  if (!token && !isLoginPage) {
-    sessionStorage.setItem('post_login_redirect', page);
-    window.location.href = 'login.html';
-  } else if (token && isLoginPage && !pendingOtp) {
-    const redirectTo = sessionStorage.getItem('post_login_redirect') || 'index.html';
-    sessionStorage.removeItem('post_login_redirect');
-    window.location.href = redirectTo;
-  }
-})();
-
 // ─── MOBILE HAMBURGER NAV ───────────────────────────────
 (function initMobileNav() {
   const hamburger = document.getElementById('hamburger');
@@ -135,7 +118,7 @@ function updateFlip(id, value) {
 // ─── TOAST NOTIFICATION ─────────────────────────────────
 function showToast(title, msg, type = 'success') {
   document.querySelectorAll('.toast').forEach(t => t.remove());
-  const icons = { success: 'fa-circle-check', warning: 'fa-triangle-exclamation', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+  const icons  = { success: 'fa-circle-check', warning: 'fa-triangle-exclamation', error: 'fa-circle-xmark', info: 'fa-circle-info' };
   const colors = { success: 'var(--cyan)', warning: 'var(--orange)', error: 'var(--magenta)', info: '#a78bfa' };
   const icon  = icons[type]  || icons.success;
   const color = colors[type] || colors.success;
@@ -154,40 +137,7 @@ function showToast(title, msg, type = 'success') {
   setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 5000);
 }
 
-// ─── REGISTER FORM ──────────────────────────────────────
-async function submitForm(e) {
-  e.preventDefault();
-  const btn   = e.target.querySelector('.form-btn');
-  const name  = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim().toLowerCase();
-  const phone = document.getElementById('phone').value.trim();
-  const event = document.getElementById('event').value;
-
-  if (!name || !email || !event) {
-    showToast('Missing Fields', 'Please fill in all required fields.', 'warning'); return;
-  }
-
-  // Button loading state
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Processing…';
-
-  try {
-    const record = await dbAddRegistration({ name, email, phone, event });
-    e.target.reset();
-    showConfirmation(record);
-  } catch (err) {
-    if (err && err.duplicate) {
-      showToast('Already Registered', err.message, 'warning');
-    } else {
-      showToast('Error', 'Something went wrong. Please try again.', 'error');
-      console.error(err);
-    }
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-satellite-dish"></i> &nbsp;Transmit Data';
-  }
-}
-
+// ─── REGISTRATION CONFIRMATION ──────────────────────────
 function showConfirmation(record) {
   const modal = document.getElementById('confirm-modal');
   if (!modal) { showToast('Registered!', `Welcome, ${record.name}! ID: ${record.regId}`, 'success'); return; }
@@ -201,6 +151,164 @@ function closeModal() {
   const modal = document.getElementById('confirm-modal');
   if (modal) modal.classList.remove('open');
 }
+
+// ─── OTP-GATED REGISTRATION ──────────────────────────────
+// Registration handled via OTP flow — see startOtpFlow() / verifyOtpAndRegister()
+const OTP_REG_KEY = 'reg_otp_challenge';
+
+function getPendingRegData() {
+  try {
+    const d = JSON.parse(sessionStorage.getItem(OTP_REG_KEY));
+    if (!d || Date.now() - d.createdAt > 10 * 60 * 1000) {
+      sessionStorage.removeItem(OTP_REG_KEY);
+      return null;
+    }
+    return d;
+  } catch (_) { return null; }
+}
+
+async function startOtpFlow() {
+  const btn   = document.getElementById('send-otp-btn');
+  const name  = document.getElementById('name')?.value.trim();
+  const email = document.getElementById('email')?.value.trim().toLowerCase();
+  const phone = document.getElementById('phone')?.value.trim();
+  const event = document.getElementById('event')?.value;
+
+  if (!name || !email || !event) {
+    showToast('Missing Fields', 'Please fill name, email and event before continuing.', 'warning'); return;
+  }
+  if (!phone) {
+    showToast('Phone Required', 'Enter your phone number to receive the OTP.', 'warning'); return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Sending OTP…';
+
+  try {
+    const res  = await fetch(window.TechFestAPI.url('/auth/send-otp'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to send OTP');
+
+    sessionStorage.setItem(OTP_REG_KEY, JSON.stringify({ name, email, phone, event, otp: data.otp, createdAt: Date.now() }));
+
+    document.getElementById('mock-otp-code').innerText = data.otp;
+    document.getElementById('mock-otp-display').classList.add('is-visible');
+    document.getElementById('details-step').style.display = 'none';
+    document.getElementById('otp-step').classList.add('is-visible');
+    document.getElementById('form-step-title').innerHTML = '<i class="fas fa-shield-alt" style="color:var(--cyan);margin-right:8px;"></i> Verify Identity';
+    document.getElementById('reg-subtitle').textContent = 'Enter the 6-digit code sent to your phone.';
+    setTimeout(() => document.querySelector('.otp-digit')?.focus(), 100);
+    showToast('OTP Sent', 'Use the mock SMS code shown in the form.', 'success');
+  } catch (err) {
+    showToast('Error', err.message || 'Server unreachable. Is the backend running?', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> &nbsp;Send OTP &amp; Continue';
+  }
+}
+
+function backToDetails() {
+  document.getElementById('otp-step').classList.remove('is-visible');
+  document.getElementById('details-step').style.display = '';
+  document.getElementById('form-step-title').innerHTML = '<i class="fas fa-id-badge" style="color:var(--orange);margin-right:8px;"></i> Candidate Profile';
+  document.getElementById('reg-subtitle').textContent = 'Transmit your credentials to gain entry.';
+  document.querySelectorAll('.otp-digit').forEach(i => { i.value = ''; });
+  document.getElementById('mock-otp-display').classList.remove('is-visible');
+}
+
+async function verifyOtpAndRegister() {
+  const btn     = document.getElementById('verify-otp-btn');
+  const pending = getPendingRegData();
+  if (!pending) {
+    showToast('Session Expired', 'OTP session expired. Please start again.', 'warning');
+    backToDetails(); return;
+  }
+
+  const otpDigits = Array.from(document.querySelectorAll('.otp-digit')).map(i => i.value);
+  const otp = otpDigits.join('');
+  if (otp.length < 6) {
+    showToast('Incomplete Code', 'Please enter all 6 digits of the OTP.', 'warning'); return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Verifying…';
+
+  try {
+    // Verify OTP first
+    const vRes  = await fetch(window.TechFestAPI.url('/auth/verify-otp'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: pending.phone, otp })
+    });
+    const vData = await vRes.json();
+    if (!vRes.ok) throw new Error(vData.error || 'Invalid OTP');
+
+    // OTP verified — now register
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> &nbsp;Registering…';
+    const record = await dbAddRegistration({ name: pending.name, email: pending.email, phone: pending.phone, event: pending.event });
+    sessionStorage.removeItem(OTP_REG_KEY);
+
+    // Reset form
+    document.getElementById('reg-form').reset();
+    backToDetails();
+    showConfirmation(record);
+  } catch (err) {
+    if (err && err.duplicate) {
+      showToast('Already Registered', err.message, 'warning');
+    } else {
+      showToast('Error', err.message || 'Something went wrong. Please try again.', 'error');
+    }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-shield-alt"></i> &nbsp;Verify &amp; Register';
+  }
+}
+
+// OTP digit keyboard navigation for registration form
+(function initRegOtpInputs() {
+  // Wait for DOM
+  document.addEventListener('DOMContentLoaded', () => setupOtpDigits());
+  // Also run immediately in case DOM is already ready
+  if (document.readyState !== 'loading') setupOtpDigits();
+
+  function setupOtpDigits() {
+    const otpInputs = document.querySelectorAll('.otp-digit');
+    if (!otpInputs.length) return;
+
+    const fillBtn = document.getElementById('fill-otp-btn');
+    if (fillBtn) {
+      fillBtn.addEventListener('click', () => setOTPValue(document.getElementById('mock-otp-code').innerText));
+    }
+
+    function setOTPValue(value, startIndex = 0) {
+      const digits = String(value).replace(/\D/g, '').slice(0, otpInputs.length - startIndex);
+      if (startIndex === 0) otpInputs.forEach(i => { i.value = ''; });
+      digits.split('').forEach((d, off) => { otpInputs[startIndex + off].value = d; });
+      const next = Array.from(otpInputs).find(i => !i.value);
+      if (!next) document.getElementById('verify-otp-btn')?.focus();
+      else next.focus();
+    }
+
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const digits = e.target.value.replace(/\D/g, '');
+        if (digits.length > 1) { e.target.value = ''; setOTPValue(digits, index); return; }
+        e.target.value = digits;
+        if (e.target.value && index < otpInputs.length - 1) otpInputs[index + 1].focus();
+      });
+      input.addEventListener('paste', (e) => { e.preventDefault(); setOTPValue(e.clipboardData.getData('text'), index); });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) otpInputs[index - 1].focus();
+        else if (e.key === 'ArrowLeft' && index > 0) otpInputs[index - 1].focus();
+        else if (e.key === 'ArrowRight' && index < otpInputs.length - 1) otpInputs[index + 1].focus();
+      });
+    });
+  }
+})();
 
 // ─── ADMIN PANEL ─────────────────────────────────────────
 let _allUsers = [];
@@ -378,7 +486,7 @@ async function loadNews() {
     container.innerHTML = `
       <div class="card" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
         <i class="fas fa-satellite" style="font-size:2rem;color:var(--muted);opacity:0.4;margin-bottom:16px;display:block;"></i>
-        <p style="color:var(--muted);font-family:'Fira Code',monospace;font-size:0.85rem;">Signal lost — unable to intercept data feed.</p>
+        <p style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.85rem;">Signal lost — unable to intercept data feed.</p>
       </div>`;
   }
 }
@@ -393,7 +501,7 @@ loadNews();
         <p>TechFest Support is currently offline. Please leave a message.</p>
         <div class="faq-section" style="margin-bottom: 15px; max-height: 120px; overflow-y: auto; font-size: 0.8rem; color: var(--muted); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; background: rgba(0,0,0,0.3);">
           <strong style="color:var(--orange);">FAQ:</strong><br>
-          <strong style="color:var(--white);">Q: Where is the event?</strong><br>A: Hybrid (In-person & Remote).<br>
+          <strong style="color:var(--white);">Q: Where is the event?</strong><br>A: Hybrid (In-person &amp; Remote).<br>
           <strong style="color:var(--white);margin-top:6px;display:inline-block;">Q: Are laptops provided?</strong><br>A: No, please bring your own.<br>
           <strong style="color:var(--white);margin-top:6px;display:inline-block;">Q: Is food free?</strong><br>A: Yes, meals and energy drinks are provided.
         </div>
@@ -407,7 +515,7 @@ loadNews();
   `;
   document.body.insertAdjacentHTML('beforeend', widgetHtml);
 
-  const helpBtn = document.getElementById('help-btn');
+  const helpBtn    = document.getElementById('help-btn');
   const helpWindow = document.getElementById('help-window');
 
   helpBtn.addEventListener('click', () => {
